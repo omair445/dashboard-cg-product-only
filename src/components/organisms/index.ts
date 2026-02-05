@@ -1,0 +1,10 @@
+// Organism components - complex compositions
+export { StatCard } from './StatCard';
+export { KPICard } from './KPICard';
+export { NavSection } from './NavSection';
+export { UserCard } from './UserCard';
+export { DataTable } from './DataTable';
+export { TablePagination } from './TablePagination';
+export { ChartLegend } from './ChartLegend';
+export { FilterBar } from './FilterBar';
+export { Tabs } from './Tabs';

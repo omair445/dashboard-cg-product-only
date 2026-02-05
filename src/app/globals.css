@@ -1,26 +1,118 @@
 @import "tailwindcss";
+@plugin "flyonui";
+@import "flyonui/variants.css";
+@source "flyonui/dist/js/index.js";
+@plugin "@iconify/tailwind4";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================
+   ClickGuard Design System Tokens
+   Matching EXACTLY the original HTML prototype
+   ============================================ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Primary Brand Colors - matches Figma */
+  --color-primary-50: #eeedfe;
+  --color-primary-100: #e1dfff;
+  --color-primary-200: #cecbff;
+  --color-primary-500: #0137ff;
+  --color-primary-600: #554bfd;
+  --color-primary-700: #2d37d1;
+  --color-primary-800: #153996;
+
+  /* Text Colors - EXACT names from prototype */
+  --color-t-base-blue: #111553;
+  --color-t-heading: #080736;
+  --color-t-secondary: #475467;
+  --color-t-menu: #444346;
+  --color-t-gray-700: #344054;
+  --color-t-gray-950: #24262d;
+  --color-t-dark-blue: #554BFD;
+  --color-t-trend-up: #17B26A;
+
+  /* UI Colors */
+  --color-card-border: #eaecf0;
+  --color-input-border: #e3e7fc;
+  --color-page-bg: #F2F2F2;
+
+  /* Data Visualization Colors */
+  --color-sea-600: #A5D6A7;
+  --color-cherry-600: #EF9A9A;
+  --color-yellow-600: #FFF59D;
+  --color-neon-600: #79C9FF;
+  --color-violet-600: #C9B6FF;
+  --color-b-yellow: #EEFF9D;
+
+  /* Status Colors */
+  --color-status-normal: #17B26A;
+  --color-status-suspicious: #F79009;
+  --color-status-bad: #F04438;
+  --color-status-ignored: #667085;
+
+  /* Font Family - Uses CSS variable from next/font */
+  --font-sans: var(--font-host-grotesk), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Border Radius */
+  --radius-3xl: 24px;
+  --radius-2xl: 16px;
+  --radius-xl: 12px;
+  --radius-lg: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   Base Styles - Override FlyonUI defaults
+   ============================================ */
+:root {
+  --background: #F2F2F2;
+  --foreground: #111553;
+}
+
+* {
+  font-family: inherit;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #F2F2F2;
+  color: #111553;
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   Override FlyonUI button/component defaults
+   ============================================ */
+.btn {
+  font-family: inherit;
+}
+
+/* ============================================
+   Scrollbar Styling - Matches Figma design
+   ============================================ */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f2f2f2;
+  border-radius: 20px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #e1dfff;
+  border-radius: 20px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #cecbff;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
