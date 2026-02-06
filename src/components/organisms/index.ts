@@ -8,3 +8,4 @@ export { TablePagination } from './TablePagination';
 export { ChartLegend } from './ChartLegend';
 export { FilterBar } from './FilterBar';
 export { Tabs } from './Tabs';
+export { WorkspaceSelector } from './WorkspaceSelector';
