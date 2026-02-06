@@ -16,6 +16,7 @@ import {
   AdAccountsIcon,
   CollapseIcon,
 } from '../atoms/SidebarIcons';
+import { WorkspaceSelector } from '../organisms/WorkspaceSelector';
 
 interface SidebarProps {
   isCollapsed?: boolean;
@@ -102,7 +103,7 @@ export function Sidebar({
     >
       <div className="flex flex-col h-full">
         {/* Logo Header */}
-        <div className="flex items-center justify-between px-6 pt-8 pb-8">
+        <div className="flex items-center justify-between px-6 pt-8 pb-6">
           {!isCollapsed && <ClickGuardLogo />}
           {isCollapsed && <ClickGuardLogoIcon />}
           {!isCollapsed && (
@@ -115,6 +116,13 @@ export function Sidebar({
             </button>
           )}
         </div>
+
+        {/* Workspace Selector */}
+        {!isCollapsed && (
+          <div className="px-2 pb-6">
+            <WorkspaceSelector />
+          </div>
+        )}
 
         {/* Navigation Sections */}
         <nav className="flex-1 px-4 overflow-y-auto">
