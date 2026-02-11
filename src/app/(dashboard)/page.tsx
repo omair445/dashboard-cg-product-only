@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/Header';
 import {
   TrafficQualityCard,
   TrafficProtectionCard,
-  ProtectionChart,
+  ProtectionAnalysisCard,
   SourcesTable,
   ChannelsSection,
   CampaignTable,
@@ -24,12 +24,14 @@ const trafficProtectionData = {
   preventedWaste: 2563,
 };
 
-const protectionChartData = {
+const protectionAnalysisData = {
   labels: ['Oct 1', 'Oct 2', 'Oct 3', 'Oct 4', 'Oct 5', 'Oct 6', 'Oct 7', 'Oct 8', 'Oct 9', 'Oct 10',
            'Oct 11', 'Oct 12', 'Oct 13', 'Oct 14', 'Oct 15', 'Oct 16', 'Oct 17', 'Oct 18', 'Oct 19', 'Oct 20',
            'Oct 21', 'Oct 22', 'Oct 23', 'Oct 24', 'Oct 25', 'Oct 26', 'Oct 27', 'Oct 28', 'Oct 29', 'Oct 30'],
-  processedClicks: [45, 52, 48, 61, 55, 42, 58, 63, 47, 51, 56, 44, 59, 62, 48, 53, 57, 41, 64, 50, 46, 58, 52, 49, 61, 54, 47, 60, 55, 43],
-  invalidRate: [520, 580, 540, 610, 550, 490, 620, 570, 530, 600, 560, 510, 590, 640, 500, 580, 550, 470, 630, 520, 540, 610, 560, 490, 650, 580, 510, 620, 570, 480],
+  // Prevented ad waste in dollars (gray line, right y-axis 0-1250)
+  preventedAdWaste: [750, 680, 720, 800, 780, 650, 820, 900, 740, 880, 920, 700, 950, 1000, 720, 900, 850, 600, 1020, 800, 760, 950, 880, 740, 1050, 920, 760, 980, 900, 680],
+  // Invalid traffic rate as percentage (coral line, left y-axis 0-100)
+  invalidRate: [60, 52, 48, 65, 55, 43, 70, 72, 50, 68, 75, 45, 77, 80, 48, 72, 65, 38, 82, 58, 52, 75, 68, 50, 85, 72, 52, 78, 70, 45],
 };
 
 const sourcesData = [
@@ -86,7 +88,7 @@ export default function DashboardPage() {
 
         {/* Middle Row */}
         <div className="grid grid-cols-12 gap-4 mb-4">
-          <ProtectionChart data={protectionChartData} />
+          <ProtectionAnalysisCard data={protectionAnalysisData} />
           <SourcesTable data={sourcesData} />
         </div>
 
