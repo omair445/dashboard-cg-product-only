@@ -197,15 +197,15 @@ export default function SelectPlanPage() {
           {/* Kit-style header: ad spend question + slider row with billing on right */}
           <div className="pt-6 pb-8 px-6">
             <h2
-              className="text-[#111553] font-semibold tracking-tight mb-3 text-left w-full sm:max-w-[380px]"
+              className="text-[#111553] font-semibold tracking-tight mb-3 text-left w-full lg:max-w-[calc((100%-3rem)/3)]"
               style={{ fontSize: '24px', lineHeight: '32px' }}
             >
               What is your monthly ad spend?
             </h2>
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
-              {/* Slider block - constrained width to leave space for selectors */}
-              <div className="w-full sm:max-w-[380px] shrink-0">
+              {/* Slider block - width matches one card column for alignment */}
+              <div className="w-full lg:max-w-[calc((100%-3rem)/3)] shrink-0">
                 <div className="flex items-baseline justify-between text-sm text-[#111553] mb-1">
                   <span>{AD_SPEND_STEPS[0]}</span>
                   <span>{AD_SPEND_STEPS[MAX_AD_SPEND_INDEX]}</span>
