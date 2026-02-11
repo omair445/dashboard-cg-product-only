@@ -102,6 +102,7 @@ const ICON_MAP: Record<string, string> = {
   'link': 'link',
   'refresh': 'refresh',
   'loader': 'loader',
+  'loader-2': 'loader-2',
 };
 
 interface IconProps {

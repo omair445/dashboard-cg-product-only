@@ -85,18 +85,33 @@ export function TrafficQualityCard({ data }: TrafficQualityCardProps) {
       <div className="border-b border-gray-200 mb-7" />
 
       {/* Progress Bar with Labels */}
-      <div className="flex flex-col gap-5 mb-5">
-        {/* Percentage Labels - positioned above and right-aligned to segments */}
-        <div className="flex items-center justify-end gap-1">
-          <span className="bg-[#a5d6a7] text-t-gray-950 text-sm font-medium px-2 py-0.5 rounded">
-            {data.valid.percentage.toFixed(1)}%
-          </span>
-          <span className="bg-[rgba(250,188,4,0.5)] text-t-gray-950 text-sm font-medium px-2 py-0.5 rounded">
-            {data.suspicious.percentage.toFixed(0)}%
-          </span>
-          <span className="bg-[#eb837c] text-t-gray-950 text-sm font-medium px-2 py-0.5 rounded">
-            {data.bad.percentage.toFixed(1)}%
-          </span>
+      <div className="flex flex-col gap-2 mb-5">
+        {/* Percentage Labels - centered over their respective segments */}
+        <div className="flex items-center">
+          <div
+            className="flex items-center justify-center"
+            style={{ flex: data.valid.percentage }}
+          >
+            <span className="bg-[#a5d6a7] text-t-gray-950 text-sm font-medium px-2 py-0.5 rounded">
+              {data.valid.percentage.toFixed(1)}%
+            </span>
+          </div>
+          <div
+            className="flex items-center justify-center"
+            style={{ flex: data.suspicious.percentage }}
+          >
+            <span className="bg-[#FFF59D] text-t-gray-950 text-sm font-medium px-2 py-0.5 rounded">
+              {data.suspicious.percentage.toFixed(0)}%
+            </span>
+          </div>
+          <div
+            className="flex items-center justify-center"
+            style={{ flex: data.bad.percentage }}
+          >
+            <span className="bg-[#eb837c] text-t-gray-950 text-sm font-medium px-2 py-0.5 rounded">
+              {data.bad.percentage.toFixed(1)}%
+            </span>
+          </div>
         </div>
 
         {/* Progress Bar */}
@@ -106,7 +121,7 @@ export function TrafficQualityCard({ data }: TrafficQualityCardProps) {
             style={{ flex: data.valid.percentage }}
           />
           <div
-            className="bg-[rgba(250,188,4,0.5)]"
+            className="bg-[#FFF59D]"
             style={{ flex: data.suspicious.percentage }}
           />
           <div
