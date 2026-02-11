@@ -56,6 +56,18 @@
   --radius-2xl: 16px;
   --radius-xl: 12px;
   --radius-lg: 8px;
+
+  /* Figma Setup Redesign / Pricing page tokens */
+  --color-gray-50: #f2f2f2;
+  --color-gray-200: #e1e1e1;
+  --color-gray-400: #9f9ea3;
+  --color-gray-900: #29282a;
+  --color-brand-50: #eeedfe;
+  --color-accent-50: #eeff9d;
+  --color-accent-500: #c9ed1a;
+  --color-accent-600: #bae100;
+  --shadow-pricing-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+  --shadow-pricing-md: 0 2px 4px rgba(16, 24, 40, 0.04), 0 4px 8px rgba(16, 24, 40, 0.06);
 }
 
 /* ============================================
