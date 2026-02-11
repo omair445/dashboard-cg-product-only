@@ -102,16 +102,15 @@ export function ProtectionAnalysisCard({ data }: ProtectionAnalysisCardProps) {
         padding: 12,
         boxPadding: 4,
         usePointStyle: true,
-        pointStyle: 'circle',
         titleFont: {
           family: 'Host Grotesk',
           size: 12,
-          weight: '500',
+          weight: 500,
         },
         bodyFont: {
           family: 'Host Grotesk',
           size: 12,
-          weight: '400',
+          weight: 400,
         },
         callbacks: {
           title: (tooltipItems) => {
@@ -120,6 +119,10 @@ export function ProtectionAnalysisCard({ data }: ProtectionAnalysisCardProps) {
           label: (context) => {
             const label = context.dataset.label || '';
             const value = context.parsed.y;
+            
+            if (value === null || value === undefined) {
+              return `${label}: N/A`;
+            }
             
             if (context.datasetIndex === 0) {
               // Prevented ad waste - show as currency
@@ -142,7 +145,7 @@ export function ProtectionAnalysisCard({ data }: ProtectionAnalysisCardProps) {
           font: {
             family: 'Host Grotesk',
             size: 10,
-            weight: '500',
+            weight: 500,
           },
           maxRotation: 45,
           minRotation: 45,
@@ -162,7 +165,7 @@ export function ProtectionAnalysisCard({ data }: ProtectionAnalysisCardProps) {
           font: {
             family: 'Inter',
             size: 12,
-            weight: '400',
+            weight: 400,
           },
           callback: (value) => value,
         },
@@ -185,7 +188,7 @@ export function ProtectionAnalysisCard({ data }: ProtectionAnalysisCardProps) {
           font: {
             family: 'Inter',
             size: 12,
-            weight: '400',
+            weight: 400,
           },
           callback: (value) => value.toLocaleString(),
         },
