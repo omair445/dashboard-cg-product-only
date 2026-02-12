@@ -420,10 +420,7 @@ export default function SelectPlanPage() {
                 return (
                   <div
                     key={plan.id}
-                    className={cn(
-                      "relative rounded-2xl border border-[#eaecf0] bg-white p-6 flex flex-col min-h-0 transition-shadow shadow-[var(--shadow-pricing-sm)] hover:shadow-[var(--shadow-pricing-md)]",
-                      shouldDisable && "opacity-50"
-                    )}
+                    className="relative rounded-2xl border border-[#eaecf0] bg-white p-6 flex flex-col min-h-0 transition-shadow shadow-[var(--shadow-pricing-sm)] hover:shadow-[var(--shadow-pricing-md)]"
                   >
                     {isRecommended && (
                       <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#D1FAE5] text-[#065F46] text-xs font-semibold rounded-full">
@@ -431,11 +428,11 @@ export default function SelectPlanPage() {
                       </div>
                     )}
                   {/* Plan name */}
-                  <h2 className="text-[#111553] font-bold text-lg leading-tight">
+                  <h2 className={cn("font-bold text-3xl leading-tight", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>
                     {displayName}
                   </h2>
                   {/* Subtitle */}
-                  <p className="mt-1 text-sm text-[#111553] font-normal" style={{ lineHeight: '20px' }}>
+                  <p className={cn("mt-1 text-sm font-normal", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")} style={{ lineHeight: '20px' }}>
                     {displayDescription}
                   </p>
                   {/* Custom Pro mode: Show special copy instead of price/billing/capacity */}
@@ -457,17 +454,19 @@ export default function SelectPlanPage() {
                         </p>
                       ) : (
                         <p className="mt-4">
-                          <span className="text-[#111553] font-bold text-2xl">{currencySymbol}{displayPrice.toLocaleString()}</span>
-                          <span className="text-[#111553] font-normal text-base align-baseline">/mo</span>
+                          <span className={cn("font-bold text-2xl", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>{currencySymbol}{displayPrice.toLocaleString()}</span>
+                          <span className={cn("font-normal text-base align-baseline", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>/mo</span>
                         </p>
                       )}
                       {/* Billing line */}
-                      <p className="mt-1 text-sm text-[#475467] font-normal">
-                        {billingText || plan.billingLine}
-                      </p>
+                      {billingText && (
+                        <p className={cn("mt-1 text-sm font-normal", shouldDisable ? "text-[#9f9ea3]" : "text-[#475467]")}>
+                          {billingText}
+                        </p>
+                      )}
                   {/* Key capacity with dotted underline (number/word emphasized) */}
                   {plan.keyCapacity && (
-                    <p className="mt-2 text-sm text-[#111553] border-b border-dotted border-[#d4d4d4] pb-0.5 w-fit">
+                    <p className={cn("mt-8 text-sm border-b border-dotted border-[#d4d4d4] pb-0.5 w-fit", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>
                       {plan.keyCapacity.match(/^Up to ([\d,]+k?)\s+(.+)$/) ? (
                         <>Up to <strong>{currencySymbol}{plan.keyCapacity.replace(/^Up to ([\d,]+k?)\s+(.+)$/, '$1')}</strong> {plan.keyCapacity.replace(/^Up to [\d,]+k?\s+/, '')}</>
                       ) : plan.keyCapacity.startsWith('Unlimited ') ? (
