@@ -54,7 +54,7 @@ export function Header({
   className,
 }: HeaderProps) {
   return (
-    <header className={cn('bg-white px-8 py-4', className)}>
+    <header className={cn('bg-[#f2f2f2] px-8 py-4', className)}>
       <div className="flex items-start justify-between">
         {/* Left: Title Section */}
         <div className="flex flex-col gap-3">

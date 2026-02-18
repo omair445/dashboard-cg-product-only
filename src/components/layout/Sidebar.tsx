@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   DashboardIcon,
@@ -15,8 +16,8 @@ import {
   AuthorizationsIcon,
   AdAccountsIcon,
   CollapseIcon,
+  SettingsIcon,
 } from '../atoms/SidebarIcons';
-import { WorkspaceSelector } from '../organisms/WorkspaceSelector';
 
 interface SidebarProps {
   isCollapsed?: boolean;
@@ -27,33 +28,43 @@ interface SidebarProps {
 // Navigation section data
 const navSections = [
   {
-    title: 'REPORTING',
+    title: 'Reporting',
+    collapsible: false,
     items: [
       { icon: 'dashboard', label: 'Dashboard', href: '/' },
       { icon: 'analytics', label: 'Analytics', href: '/analytics' },
       { icon: 'threat', label: 'Threat', href: '/threat' },
-      { icon: 'clickForensics', label: 'Click Forensics', href: '/clicks' },
+      { icon: 'clickForensics', label: 'Clicks Forensics', href: '/clicks' },
       { icon: 'scheduledReports', label: 'Scheduled Reports', href: '/reports' },
     ],
   },
   {
-    title: 'PROTECTION',
+    title: 'Protection',
+    collapsible: true,
     items: [
-      { icon: 'aiRules', label: 'AI + Custom Rules', href: '/rules' },
+      { icon: 'aiRules', label: 'AI & Custom Rules', href: '/rules' },
       { icon: 'exclusions', label: 'Exclusions', href: '/exclusions' },
       { icon: 'blacklist', label: 'Blacklist', href: '/blacklist' },
     ],
   },
   {
-    title: 'CONNECTIONS',
+    title: 'Connections',
+    collapsible: true,
     items: [
       { icon: 'authorizations', label: 'Authorizations', href: '/authorizations' },
       { icon: 'adAccounts', label: 'Ad Accounts', href: '/ad-accounts' },
     ],
   },
+  {
+    title: 'Configuration',
+    collapsible: true,
+    items: [
+      { icon: 'settings', label: 'Settings', href: '/settings/billing' },
+    ],
+  },
 ];
 
-type IconName = 'dashboard' | 'analytics' | 'threat' | 'clickForensics' | 'scheduledReports' | 'aiRules' | 'exclusions' | 'blacklist' | 'authorizations' | 'adAccounts';
+type IconName = 'dashboard' | 'analytics' | 'threat' | 'clickForensics' | 'scheduledReports' | 'aiRules' | 'exclusions' | 'blacklist' | 'authorizations' | 'adAccounts' | 'settings';
 
 function getNavIcon(icon: IconName) {
   const iconClass = 'w-6 h-6';
@@ -78,13 +89,33 @@ function getNavIcon(icon: IconName) {
       return <AuthorizationsIcon className={iconClass} />;
     case 'adAccounts':
       return <AdAccountsIcon className={iconClass} />;
+    case 'settings':
+      return <SettingsIcon className={iconClass} />;
     default:
       return null;
   }
 }
 
+// Chevron Up icon
+function ChevronUpIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M5 12.5L10 7.5L15 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+// Chevron Down icon
+function ChevronDownIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M15 7.5L10 12.5L5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
 /**
- * Main sidebar navigation - Professional design with sections
+ * Main sidebar navigation - Collapsible sections design
  */
 export function Sidebar({
   isCollapsed = false,
@@ -92,6 +123,18 @@ export function Sidebar({
   className,
 }: SidebarProps) {
   const pathname = usePathname();
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    'Protection': true,
+    'Connections': true,
+    'Configuration': true,
+  });
+
+  const toggleSection = (title: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [title]: !prev[title]
+    }));
+  };
 
   return (
     <aside
@@ -103,13 +146,13 @@ export function Sidebar({
     >
       <div className="flex flex-col h-full">
         {/* Logo Header */}
-        <div className="flex items-center justify-between px-6 pt-8 pb-6">
+        <div className="flex items-center justify-between px-4 pt-8 pb-9">
           {!isCollapsed && <ClickGuardLogo />}
           {isCollapsed && <ClickGuardLogoIcon />}
           {!isCollapsed && (
             <button
               onClick={onToggleCollapse}
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-400"
+              className="p-1 hover:bg-gray-50 rounded-lg transition-colors text-gray-400"
               aria-label="Collapse sidebar"
             >
               <CollapseIcon />
@@ -117,67 +160,71 @@ export function Sidebar({
           )}
         </div>
 
-        {/* Workspace Selector */}
-        {!isCollapsed && (
-          <div className="px-2 pb-6">
-            <WorkspaceSelector />
-          </div>
-        )}
-
         {/* Navigation Sections */}
         <nav className="flex-1 px-4 overflow-y-auto">
-          {navSections.map((section, sectionIndex) => (
-            <div key={section.title} className={cn(sectionIndex > 0 && 'mt-6')}>
-              {/* Section Title */}
-              {!isCollapsed && (
-                <h3 className="px-3 mb-3 text-xs font-semibold text-gray-400 tracking-wider">
-                  {section.title}
-                </h3>
-              )}
+          {navSections.map((section, sectionIndex) => {
+            const isExpanded = section.collapsible ? expandedSections[section.title] !== false : true;
+            
+            return (
+              <div key={section.title} className={cn(sectionIndex > 0 && 'mt-4')}>
+                {/* Section Header */}
+                {section.collapsible ? (
+                  <button
+                    onClick={() => toggleSection(section.title)}
+                    className="flex items-center justify-between w-full px-0 py-2 text-sm font-normal text-[#616064] hover:text-[#444346] transition-colors"
+                  >
+                    <span>{section.title}</span>
+                    {isExpanded ? (
+                      <ChevronUpIcon className="text-[#616064]" />
+                    ) : (
+                      <ChevronDownIcon className="text-[#616064]" />
+                    )}
+                  </button>
+                ) : (
+                  <div className="px-0 py-2 text-sm font-normal text-[#616064]">
+                    {section.title}
+                  </div>
+                )}
 
-              {/* Section Items */}
-              <div className="flex flex-col gap-1">
-                {section.items.map((item) => {
-                  const isActive = item.href === '/'
-                    ? pathname === '/'
-                    : pathname.startsWith(item.href);
+                {/* Section Items */}
+                {isExpanded && (
+                  <div className="flex flex-col gap-1 mt-1 mb-2">
+                    {section.items.map((item) => {
+                      const isActive = item.href === '/'
+                        ? pathname === '/'
+                        : pathname.startsWith(item.href);
 
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        'flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200',
-                        isActive
-                          ? 'bg-[#e8e6ff] text-[#111553]'
-                          : 'text-[#4a4a4a] hover:bg-gray-50',
-                        isCollapsed && 'justify-center px-2'
-                      )}
-                    >
-                      <span className={cn(
-                        'flex-shrink-0',
-                        isActive ? 'text-[#5E54FD]' : 'text-[#6b6b6b]'
-                      )}>
-                        {getNavIcon(item.icon as IconName)}
-                      </span>
-                      {!isCollapsed && (
-                        <span className={cn(
-                          'text-base font-medium',
-                          isActive ? 'text-[#111553]' : 'text-[#4a4a4a]'
-                        )}>
-                          {item.label}
-                        </span>
-                      )}
-                    </Link>
-                  );
-                })}
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={cn(
+                            'flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200',
+                            isActive
+                              ? 'bg-[#f3f4f6] text-[#344054]'
+                              : 'text-[#344054] hover:bg-gray-50',
+                            isCollapsed && 'justify-center px-2'
+                          )}
+                        >
+                          <span className={cn(
+                            'flex-shrink-0 text-[#344054]'
+                          )}>
+                            {getNavIcon(item.icon as IconName)}
+                          </span>
+                          {!isCollapsed && (
+                            <span className="text-[14px] font-medium leading-[18px] text-[#344054]">
+                              {item.label}
+                            </span>
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </nav>
-
-        {/* Bottom Spacer */}
-        <div className="pb-6" />
       </div>
     </aside>
   );
