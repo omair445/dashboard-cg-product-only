@@ -414,6 +414,18 @@ export default function BillingPage() {
             </div>
           </div>
         </div>
+
+        {/* Cancellation Section */}
+        <div className="bg-white rounded-[24px] p-8">
+          <h2 className="text-[24px] font-medium leading-[30px] text-[#111553] mb-6">Cancellation</h2>
+          
+          <div className="flex items-center justify-between">
+            <span className="text-[16px] font-normal text-[#29282a]">Cancel plan</span>
+            <button className="px-4 py-[10px] bg-white border border-[#eeedfe] rounded-full text-[16px] font-medium text-[#de3024] hover:bg-[#fef3f2] transition-colors">
+              Cancel
+            </button>
+          </div>
+        </div>
         </div>
       </div>
     </div>
