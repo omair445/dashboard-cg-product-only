@@ -75,7 +75,6 @@ const PLANS: Array<{
     buildsOn: 'Standard',
     features: [
       { label: 'Unlimited websites', tooltip: 'Protect as many sites as you need.' },
-      { label: 'Comprehensive reporting', tooltip: 'Full analytics and custom reports.' },
       { label: 'Conversion tracking', tooltip: 'Track the full funnel to optimize for real conversions.' },
       { label: 'Server-side tracking', tooltip: 'More accurate, fraud-resistant conversion data.' },
       { label: 'Unlimited custom protection rules', tooltip: 'No limit on custom rules.' },
@@ -436,7 +435,9 @@ export default function SelectPlanPage() {
                       "relative rounded-2xl border p-6 flex flex-col min-h-0 transition-all",
                       shouldDisable
                         ? "border-[#e5e5e5] bg-[#f5f5f5] opacity-60"
-                        : "border-[#eaecf0] bg-white shadow-[var(--shadow-pricing-sm)] hover:shadow-[var(--shadow-pricing-md)]"
+                        : isRecommended
+                          ? "border-2 border-[#554bfd] bg-white shadow-[var(--shadow-pricing-sm)] hover:shadow-[var(--shadow-pricing-md)]"
+                          : "border border-[#eaecf0] bg-white shadow-[var(--shadow-pricing-sm)] hover:shadow-[var(--shadow-pricing-md)]"
                     )}
                   >
                     {isRecommended && !shouldDisable && (
@@ -529,9 +530,7 @@ export default function SelectPlanPage() {
                       "mt-4 w-full py-3 px-4 rounded-lg font-bold text-sm text-center transition-colors",
                       shouldDisable || (isCustomProMode && isProPlan && !customAdSpend)
                         ? "bg-[#d4d4d4] text-[#9f9ea3] cursor-not-allowed"
-                        : isRecommended
-                          ? "bg-[#EDFF9D] text-[#111553] hover:bg-[#d4e885]"
-                          : "bg-[#e5e5e5] text-[#111553] hover:bg-[#d4d4d4]"
+                        : "bg-[#EDFF9D] text-[#111553] hover:bg-[#d4e885]"
                     )}
                   >
                     {isCustomProMode && isProPlan ? 'Request quote and start trial' : plan.cta}
