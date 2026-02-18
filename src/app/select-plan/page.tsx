@@ -121,6 +121,7 @@ export default function SelectPlanPage() {
   const [activeCardIndex, setActiveCardIndex] = useState(1);
   const [currency, setCurrency] = useState<(typeof CURRENCIES)[number]['code']>('USD');
   const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
+  const [customAdSpend, setCustomAdSpend] = useState('');
   const sliderTrackRef = useRef<HTMLDivElement>(null);
 
   // Determine which plan should be recommended based on ad spend
@@ -382,7 +383,18 @@ export default function SelectPlanPage() {
               {PLANS.map((plan) => {
                 const isRecommended = plan.id === recommendedPlanId;
                 const isProPlan = plan.id === 'pro';
-                const shouldDisable = isCustomProMode && (plan.id === 'lite' || plan.id === 'standard');
+                
+                // Disable logic based on ad spend
+                const isLitePlan = plan.id === 'lite';
+                const isStandardPlan = plan.id === 'standard';
+                const adSpendValue = AD_SPEND_STEPS[adSpendIndex];
+                
+                // Disable Lite if ad spend > $5K (index > 0)
+                const liteShouldDisable = isLitePlan && adSpendIndex > 0;
+                // Disable Standard if ad spend > $50K (index > 6)
+                const standardShouldDisable = isStandardPlan && adSpendIndex > 6;
+                
+                const shouldDisable = isCustomProMode && (plan.id === 'lite' || plan.id === 'standard') || liteShouldDisable || standardShouldDisable;
                 
                 // Override plan details for Custom Pro mode
                 const displayName = isCustomProMode && isProPlan ? 'Custom Pro' : plan.name;
@@ -420,9 +432,14 @@ export default function SelectPlanPage() {
                 return (
                   <div
                     key={plan.id}
-                    className="relative rounded-2xl border border-[#eaecf0] bg-white p-6 flex flex-col min-h-0 transition-shadow shadow-[var(--shadow-pricing-sm)] hover:shadow-[var(--shadow-pricing-md)]"
+                    className={cn(
+                      "relative rounded-2xl border p-6 flex flex-col min-h-0 transition-all",
+                      shouldDisable
+                        ? "border-[#e5e5e5] bg-[#f5f5f5] opacity-60"
+                        : "border-[#eaecf0] bg-white shadow-[var(--shadow-pricing-sm)] hover:shadow-[var(--shadow-pricing-md)]"
+                    )}
                   >
-                    {isRecommended && (
+                    {isRecommended && !shouldDisable && (
                       <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#D1FAE5] text-[#065F46] text-xs font-semibold rounded-full">
                         Recommended
                       </div>
@@ -437,19 +454,43 @@ export default function SelectPlanPage() {
                   </p>
                   {/* Custom Pro mode: Show special copy instead of price/billing/capacity */}
                   {isCustomProMode && isProPlan ? (
-                    <div className="mt-4">
-                      <p className="text-[#111553] font-bold text-base">
-                        Over {currencySymbol}100k ad spend?
-                      </p>
-                      <p className="text-sm text-[#111553] font-normal mt-1">
-                        We will send you a quote for a custom plan.
-                      </p>
-                    </div>
+                    <>
+                      <div className="mt-4">
+                        <p className={cn("font-bold text-2xl", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>
+                          Over {currencySymbol}100k ad spend?
+                        </p>
+                        <p className={cn("text-sm font-normal mt-1", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>
+                          We will send you a quote for a custom plan.
+                        </p>
+                      </div>
+                      {/* Input field for custom ad spend */}
+                      <div className="mt-8">
+                        <label htmlFor="custom-ad-spend" className="block text-sm font-medium text-[#111553] mb-2">
+                          Your monthly ad spend
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#111553] font-medium">
+                            {currencySymbol}
+                          </span>
+                          <input
+                            id="custom-ad-spend"
+                            type="text"
+                            value={customAdSpend}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/[^0-9]/g, '');
+                              setCustomAdSpend(value);
+                            }}
+                            placeholder="e.g., 150000"
+                            className="w-full pl-8 pr-4 py-2.5 border-2 border-[#e1e1e1] rounded-lg text-[#111553] placeholder:text-[#9f9ea3] focus:border-primary-600 focus:outline-none transition-colors"
+                          />
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <>
                       {/* Price */}
                       {plan.priceLabel ? (
-                        <p className="mt-4 text-[#111553] font-semibold text-base">
+                        <p className={cn("mt-4 font-semibold text-base", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>
                           {plan.priceLabel}
                         </p>
                       ) : (
@@ -466,7 +507,7 @@ export default function SelectPlanPage() {
                       )}
                   {/* Key capacity with dotted underline (number/word emphasized) */}
                   {plan.keyCapacity && (
-                    <p className={cn("mt-8 text-sm border-b border-dotted border-[#d4d4d4] pb-0.5 w-fit", shouldDisable ? "text-[#9f9ea3]" : "text-[#111553]")}>
+                    <p className={cn("mt-8 text-sm border-b border-dotted pb-0.5 w-fit", shouldDisable ? "text-[#9f9ea3] border-[#d4d4d4]" : "text-[#111553] border-[#d4d4d4]")}>
                       {plan.keyCapacity.match(/^Up to ([\d,]+k?)\s+(.+)$/) ? (
                         <>Up to <strong>{currencySymbol}{plan.keyCapacity.replace(/^Up to ([\d,]+k?)\s+(.+)$/, '$1')}</strong> {plan.keyCapacity.replace(/^Up to [\d,]+k?\s+/, '')}</>
                       ) : plan.keyCapacity.startsWith('Unlimited ') ? (
@@ -483,11 +524,11 @@ export default function SelectPlanPage() {
                   {/* CTA - dynamic background based on recommendation, disabled for non-pro in Custom Pro mode */}
                   <button
                     type="button"
-                    disabled={shouldDisable}
+                    disabled={shouldDisable || (isCustomProMode && isProPlan && !customAdSpend)}
                     className={cn(
                       "mt-4 w-full py-3 px-4 rounded-lg font-bold text-sm text-center transition-colors",
-                      shouldDisable
-                        ? "bg-[#e5e5e5] text-[#111553] cursor-not-allowed"
+                      shouldDisable || (isCustomProMode && isProPlan && !customAdSpend)
+                        ? "bg-[#d4d4d4] text-[#9f9ea3] cursor-not-allowed"
                         : isRecommended
                           ? "bg-[#EDFF9D] text-[#111553] hover:bg-[#d4e885]"
                           : "bg-[#e5e5e5] text-[#111553] hover:bg-[#d4d4d4]"
@@ -496,10 +537,10 @@ export default function SelectPlanPage() {
                     {isCustomProMode && isProPlan ? 'Request quote and start trial' : plan.cta}
                   </button>
                   {plan.customNote && (
-                    <p className="mt-3 text-xs text-[#475467] leading-relaxed">{plan.customNote}</p>
+                    <p className={cn("mt-3 text-xs leading-relaxed", shouldDisable ? "text-[#9f9ea3]" : "text-[#475467]")}>{plan.customNote}</p>
                   )}
                   {/* Gray separator */}
-                  <hr className="mt-5 mb-4 border-t border-[#e1e1e1]" />
+                  <hr className={cn("mt-5 mb-4 border-t", shouldDisable ? "border-[#d4d4d4]" : "border-[#e1e1e1]")} />
                   {/* Feature list intro */}
                   <p className="text-sm text-[#111553] font-bold mb-3">
                     {plan.buildsOn ? (
@@ -515,6 +556,15 @@ export default function SelectPlanPage() {
                         <FeatureItem label={feature.label} tooltip={feature.tooltip} />
                       </li>
                     ))}
+                    {/* Add Dedicated Customer Success Manager for Custom Pro */}
+                    {isCustomProMode && isProPlan && (
+                      <li>
+                        <FeatureItem 
+                          label="Dedicated Customer Success Manager" 
+                          tooltip="Get personalized support from a dedicated account manager to maximize your ROI." 
+                        />
+                      </li>
+                    )}
                   </ul>
                   </div>
                 );
