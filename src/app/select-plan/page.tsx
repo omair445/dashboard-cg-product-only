@@ -18,7 +18,7 @@ const PLANS: Array<{
   id: string;
   name: string;
   description: string;
-  price?: string;
+  basePrice?: number;
   period?: string;
   priceLabel?: string;
   billingLine: string;
@@ -33,7 +33,7 @@ const PLANS: Array<{
     id: 'lite',
     name: 'Lite',
     description: 'Essential click fraud protection for single-site businesses',
-    price: '$74',
+    basePrice: 74,
     period: '/mo',
     billingLine: 'Billed monthly (Pay yearly, get 2 months free)',
     keyCapacity: 'Up to 5k ad spend',
@@ -50,7 +50,7 @@ const PLANS: Array<{
     id: 'standard',
     name: 'Standard',
     description: 'Advanced protection to safeguard growing ad budgets',
-    price: '$119',
+    basePrice: 119,
     period: '/mo',
     billingLine: 'Billed monthly (Pay yearly, get 2 months free)',
     keyCapacity: 'Up to 50k ad spend',
@@ -67,7 +67,7 @@ const PLANS: Array<{
     id: 'pro',
     name: 'Pro',
     description: 'Full-stack click protection for maximizing ROAS on high-volume traffic',
-    price: '$159',
+    basePrice: 159,
     period: '/mo',
     billingLine: 'Billed monthly (Pay yearly, get 2 months free)',
     keyCapacity: 'Up to 100k ad spend',
@@ -122,6 +122,14 @@ export default function SelectPlanPage() {
   const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
   const [customAdSpend, setCustomAdSpend] = useState('');
   const sliderTrackRef = useRef<HTMLDivElement>(null);
+
+  // Calculate price multiplier based on ad spend
+  const getPriceMultiplier = useCallback(() => {
+    // Ad spend steps: ['$5K', '$10K', '$15K', '$20K', '$30K', '$40K', '$50K', '$75K', '$100K', '$100K+']
+    // Multipliers increase gradually with ad spend
+    const multipliers = [1.0, 1.2, 1.4, 1.6, 2.0, 2.4, 2.8, 3.5, 4.2, 5.0];
+    return multipliers[adSpendIndex] || 1.0;
+  }, [adSpendIndex]);
 
   // Determine which plan should be recommended based on ad spend
   const getRecommendedPlanId = useCallback(() => {
@@ -404,8 +412,9 @@ export default function SelectPlanPage() {
                 // Get current currency symbol
                 const currencySymbol = CURRENCIES.find(c => c.code === currency)?.symbol || '$';
                 
-                // Calculate pricing based on billing frequency
-                const basePrice = plan.price ? parseInt(plan.price.replace('$', '')) : 0;
+                // Calculate pricing based on billing frequency and ad spend
+                const priceMultiplier = getPriceMultiplier();
+                const basePrice = plan.basePrice ? Math.round(plan.basePrice * priceMultiplier) : 0;
                 let displayPrice = basePrice;
                 let billingTotal = 0;
                 let savingsAmount = 0;
@@ -442,7 +451,7 @@ export default function SelectPlanPage() {
                   >
                     {isRecommended && !shouldDisable && (
                       <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#D1FAE5] text-[#065F46] text-xs font-semibold rounded-full">
-                        Recommended
+                        Best value
                       </div>
                     )}
                   {/* Plan name */}
